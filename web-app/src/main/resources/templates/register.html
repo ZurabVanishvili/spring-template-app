@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Register</title>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>Register</h1>
+<form id="registerForm" method="post">
+    <div>
+        <label for="login">login:</label>
+        <input type="text" id="login" name="login" required />
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required />
+    </div>
+    <div>
+        <button type="submit">Register</button>
+    </div>
+</form>
+<div id="result"></div>
+
+<script>
+    $(document).ready(function() {
+        debugger
+
+        $('#registerForm').on('submit', function(event) {
+            event.preventDefault(); 
+
+            const userData = {
+                login: $('#login').val(),
+                password: $('#password').val(),
+            };
+
+            $.ajax({
+                url: '/api/v1/public/user/create',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(userData),
+                success: function(response) {
+                    $('#result').html('<p>User registered successfully!</p>');
+                },
+                error: function(xhr) {
+                    $('#result').html('<p>Error: ' + xhr.responseText + '</p>');
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
