@@ -29,6 +29,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/login", "/register", ApiConstants.APP_REST_CONTEXT_PATH + "/public/**").permitAll()
+                        .requestMatchers(ApiConstants.APP_REST_CONTEXT_PATH + "/user/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLoginConfigurer -> formLoginConfigurer

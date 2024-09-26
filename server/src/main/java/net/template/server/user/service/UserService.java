@@ -7,9 +7,12 @@ import net.template.server.user.model.UserDTO;
 import net.template.server.user.repository.UserRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -35,6 +38,14 @@ public class UserService {
 
     public UserDTO save(UserDTO dto) {
         User user = mapper.toEntity(dto);
+
+        if (user.getId() <= 0) {
+            Optional<User> userOptional = repository.findByLoginAndIdNot(user.getLogin(), user.getId());
+            if (userOptional.isPresent()) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, String.format("User with login %s already exists", user.getLogin()));
+            }
+        }
+
         return mapper.toDTO(repository.save(user));
     }
 
