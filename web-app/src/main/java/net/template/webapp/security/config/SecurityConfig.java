@@ -1,6 +1,5 @@
 package net.template.webapp.security.config;
 
-import jakarta.servlet.ServletException;
 import net.template.server.security.util.SecurityUtil;
 import net.template.server.security.util.config.CustomUserDetailsService;
 import net.template.webapp.ApiConstants;
@@ -13,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -28,27 +28,24 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/login", "/register", ApiConstants.APP_REST_CONTEXT_PATH + "/public/**").permitAll()
+                        .requestMatchers("/public/**", "/login/**").permitAll()
                         .requestMatchers(ApiConstants.APP_REST_CONTEXT_PATH + "/user/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLoginConfigurer -> formLoginConfigurer
-                        .loginPage("/login")
-                        .loginProcessingUrl("/login")
-                        .successForwardUrl("/user")
-                        .permitAll()
+                                .loginPage("/public/login")
+                                .loginProcessingUrl("/public/login")
+                                .defaultSuccessUrl("/app")
+                        .successHandler((request, response, authentication) -> response.sendRedirect(ApiConstants.APP_REST_CONTEXT_PATH + "/user"))
+                                .permitAll()
                 )
-                .logout((httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer.addLogoutHandler((request, response, authentication) -> {
-                    try {
-                        request.logout();
-                    } catch (ServletException e) {
-                        throw new RuntimeException(e);
-                    }
-                })))
-                .httpBasic(httpBasicConfigurer -> httpBasicConfigurer.realmName("template"));
+                .logout((httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer.logoutSuccessUrl("/login")))
+                .addFilterBefore(new LoginFilter("/app"), DefaultLoginPageGeneratingFilter.class);
+
 
         return http.build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {

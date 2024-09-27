@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import net.template.server.permission.entity.PermissionDto;
+import net.template.server.permission.model.PermissionDto;
 import net.template.server.role.model.RoleDTO;
 import net.template.server.security.util.SecurityUtil;
 

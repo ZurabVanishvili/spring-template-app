@@ -1,6 +1,7 @@
 package net.template.server.user.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -42,7 +43,7 @@ public class User {
     )
     private Set<Permission> permissions = new HashSet<>();
 
-
+    @JsonIgnore
     @ManyToMany(mappedBy = "users")
     private Set<Role> roles = new HashSet<>();
 

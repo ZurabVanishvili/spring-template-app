@@ -1,6 +1,7 @@
 package net.template.server.role.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,6 +31,7 @@ public class Role {
     @Column(name = "CODE", unique = true)
     private String code;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "SYS_USER_ROLES",
