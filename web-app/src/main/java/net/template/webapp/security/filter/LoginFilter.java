@@ -1,4 +1,4 @@
-package net.template.webapp.security.config;
+package net.template.webapp.security.filter;
 
 
 import jakarta.servlet.ServletException;

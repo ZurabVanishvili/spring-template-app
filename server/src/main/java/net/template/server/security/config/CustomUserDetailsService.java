@@ -1,4 +1,4 @@
-package net.template.server.security.util.config;
+package net.template.server.security.config;
 
 import jakarta.transaction.Transactional;
 import net.template.server.user.entity.User;

@@ -158,6 +158,56 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>skip-client</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <version>${maven-resources-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>position-react-public-app-build</id>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <phase>prepare-package</phase>
+                                <configuration>
+                                    <outputDirectory>${project.build.outputDirectory}/static/public</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${client-publicApp-src-dir}/build</directory>
+                                            <filtering>false</filtering>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>build-info</id>
+                                <goals>
+                                    <goal>build-info</goal>
+                                </goals>
+                                <configuration>
+                                    <additionalProperties>
+                                        <nodeVersion>${node.version}</nodeVersion>
+                                        <yarnVersion>${yarn.version}</yarnVersion>
+                                    </additionalProperties>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
 </project>

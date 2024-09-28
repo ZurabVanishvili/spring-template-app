@@ -1,0 +1,184 @@
+@font-face {
+    font-family: 'FiraGO';
+    src: url(../fonts/firago-all-400-italic.woff2);
+    font-weight: 350;
+}
+@font-face {
+    font-family: 'FiraGO';
+    src: url(../fonts/firago-all-500-normal.woff2);
+    font-weight: 500;
+}
+@font-face {
+    font-family: 'FiraGO';
+    src: url(../fonts/firago-all-700-normal.woff2);
+    font-weight: 700;
+}
+
+
+body {
+    margin: 0;
+    padding: 0;
+    background: #EFEFF4 0% 0% no-repeat padding-box;
+    background-image: url('../img/bg.png');
+    opacity: 1;
+    font-family: FiraGO;
+}
+
+.containerWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    position: relative;
+    margin-top: 20vh;
+    margin-left: -890px;
+}
+
+.container h1 {
+    z-index: -1000;
+    position: absolute;
+    top: -270px;
+    left: 50px;
+    font: normal normal 700 455px/475px FiraGO;
+    text-align: left;
+    letter-spacing: 0px;
+    color: #232540;
+    opacity: 0.1;
+}
+
+.container h2 {
+    width: 243px;
+    height: 33px;
+    position: absolute;
+    top: 317px;
+    left: 484px;
+    font: normal normal 500 28px/35px FiraGO;
+    letter-spacing: 0px;
+    color: #232540;
+    opacity: 1;
+    text-align: center;
+}
+
+
+.container p {
+    top: 367px;
+    left: 525px;
+    position: absolute;
+    width: 185px;
+    height: 39px;
+    text-align: left;
+    font: normal normal 350 16px/20px FiraGO;
+    letter-spacing: 0px;
+    color: #232540;
+    opacity: 1;
+}
+
+.container a {
+    top: 467px;
+    left: 525px;
+    position: absolute;
+    width: 185px;
+    height: 39px;
+    text-align: center;
+    font: normal normal 350 24px/20px FiraGO;
+    letter-spacing: 0px;
+    color: #232540;
+    opacity: 1;
+}
+
+@media (max-width: 778px) {
+    .container {
+        position: relative;
+        margin-left: -980px;
+    }
+
+    .container  h1 {
+        top: 50px;
+        left: 260px;
+        font: normal normal 700 280px/105px FiraGO;
+    }
+
+    .container h2 {
+        top: 317px;
+        left: 444px;
+        font: normal normal 500 28px/35px FiraGO;
+    }
+
+
+    .container p {
+        top: 367px;
+        left: 485px;
+        font: normal normal 350 16px/20px FiraGO;
+    }
+
+    .container a {
+        top: 467px;
+        left: 485px;
+        font: normal normal 350 24px/20px FiraGO;
+    }
+}
+
+@media (max-height: 680px) {
+    .container {
+        /*overflow-x: auto;*/
+        margin-top: calc(50vh - 400px);
+    }
+
+    .container  h1 {
+        top: 50px;
+        left: 260px;
+        font: normal normal 700 280px/105px FiraGO;
+    }
+
+    .container h2 {
+        top: 317px;
+        left: 444px;
+        font: normal normal 500 28px/35px FiraGO;
+    }
+
+
+    .container p {
+        top: 367px;
+        left: 485px;
+        font: normal normal 350 16px/20px FiraGO;
+    }
+
+    .container a {
+        top: 467px;
+        left: 485px;
+        font: normal normal 350 24px/20px FiraGO;
+    }
+
+}
+
+@media (max-height: 450px) {
+    .container {
+        margin-top: calc(50vh - 500px);
+    }
+    .container  h1 {
+        top: 50px;
+        left: 260px;
+        font: normal normal 700 280px/105px FiraGO;
+    }
+
+    .container h2 {
+        top: 317px;
+        left: 444px;
+        font: normal normal 500 28px/35px FiraGO;
+    }
+
+
+    .container p {
+        top: 367px;
+        left: 485px;
+        font: normal normal 350 16px/20px FiraGO;
+    }
+
+    .container a {
+        top: 467px;
+        left: 485px;
+        font: normal normal 350 24px/20px FiraGO;
+    }
+}

@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import React, { useState, ChangeEvent } from "react";
 import {
   TextField,
   Button,
@@ -20,11 +20,6 @@ const LoginPage: React.FC = () => {
       ...prevState,
       [name]: value,
     }));
-  };
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Login details:", formData);
   };
 
   return (
@@ -51,53 +46,51 @@ const LoginPage: React.FC = () => {
       >
         <Avatar
           sx={{ backgroundColor: "primary.main", marginBottom: "1rem" }}
-        ></Avatar>
+        />
         <Typography component="h1" variant="h5">
           Login
         </Typography>
-        <Box
-          component="form"
-          sx={{ width: "100%", marginTop: "1rem" }}
-          onSubmit={handleSubmit}
-        >
-          <TextField
-            variant="outlined"
-            fullWidth
-            label="Username or Email"
-            name="username"
-            autoComplete="username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-            sx={{ marginBottom: "1rem" }}
-          />
-          <TextField
-            variant="outlined"
-            fullWidth
-            label="Password"
-            name="password"
-            type="password"
-            autoComplete="current-password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            sx={{ marginBottom: "1rem" }}
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{
-              marginTop: "1.5rem",
-              backgroundColor: "primary.main",
-              color: "#fff",
-              "&:hover": {
-                backgroundColor: "primary.dark",
-              },
-            }}
-          >
-            Login
-          </Button>
+        <Box sx={{ width: "100%", marginTop: "1rem" }}>
+          <form method="POST" action={`/app/public/login`} noValidate={true}>
+            <TextField
+              variant="outlined"
+              fullWidth
+              label="Username or Email"
+              name="username"
+              autoComplete="username"
+              value={formData.username}
+              onChange={handleChange}
+              required
+              sx={{ marginBottom: "1rem" }}
+            />
+            <TextField
+              variant="outlined"
+              fullWidth
+              label="Password"
+              name="password"
+              type="password"
+              autoComplete="current-password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              sx={{ marginBottom: "1rem" }}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{
+                marginTop: "1.5rem",
+                backgroundColor: "primary.main",
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "primary.dark",
+                },
+              }}
+            >
+              Login
+            </Button>
+          </form>
         </Box>
       </Paper>
     </Box>
