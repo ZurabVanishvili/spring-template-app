@@ -25,7 +25,7 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(AuthenticationRequest request) {
         UserDTO dto = new UserDTO();
-        dto.setLogin(request.getLogin());
+        dto.setLogin(request.getUsername());
         dto.setPassword(request.getPassword());
 
         try {
@@ -43,11 +43,11 @@ public class AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getLogin(), request.getPassword()
+                        request.getUsername(), request.getPassword()
                 )
         );
         if (authentication.isAuthenticated()) {
-            return authSuccessResponse(request.getLogin());
+            return authSuccessResponse(request.getUsername());
         }
 
         return new AuthenticationResponse(null);

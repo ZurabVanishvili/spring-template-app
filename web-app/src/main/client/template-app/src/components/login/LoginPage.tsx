@@ -7,12 +7,67 @@ import {
   Paper,
   Avatar,
 } from "@mui/material";
+import axios from "../../api/axios";
+import { anonymousConfigType } from "../../redux/actions";
+import { connect } from "react-redux";
 
-const LoginPage: React.FC = () => {
+interface LoginPageProps {
+  config: anonymousConfigType;
+}
+
+const FormContent: React.FC<{
+  formData: { username: string; password: string };
+  handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
+}> = ({ formData, handleChange }) => (
+  <>
+    <TextField
+      variant="outlined"
+      fullWidth
+      label="Username or Email"
+      name="username"
+      autoComplete="username"
+      value={formData.username}
+      onChange={handleChange}
+      required
+      sx={{ marginBottom: "1rem" }}
+    />
+    <TextField
+      variant="outlined"
+      fullWidth
+      label="Password"
+      name="password"
+      type="password"
+      autoComplete="current-password"
+      value={formData.password}
+      onChange={handleChange}
+      required
+      sx={{ marginBottom: "1rem" }}
+    />
+    <Button
+      type="submit"
+      fullWidth
+      variant="contained"
+      sx={{
+        marginTop: "1.5rem",
+        backgroundColor: "primary.main",
+        color: "#fff",
+        "&:hover": {
+          backgroundColor: "primary.dark",
+        },
+      }}
+    >
+      Login
+    </Button>
+  </>
+);
+
+const LoginPage: React.FC<LoginPageProps> = ({ config }) => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
+
+  const authType = config.authType;
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -20,6 +75,20 @@ const LoginPage: React.FC = () => {
       ...prevState,
       [name]: value,
     }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (authType.toUpperCase() === "JWT") {
+      try {
+        const response = await axios.post("/jwt/login", formData);
+        localStorage.setItem("token", response.data.token);
+        const users = axios.get("/user");
+        console.log(users);
+      } catch (err: any) {
+        console.error("Login failed:", err);
+      }
+    }
   };
 
   return (
@@ -51,50 +120,23 @@ const LoginPage: React.FC = () => {
           Login
         </Typography>
         <Box sx={{ width: "100%", marginTop: "1rem" }}>
-          <form method="POST" action={`/app/public/login`} noValidate={true}>
-            <TextField
-              variant="outlined"
-              fullWidth
-              label="Username or Email"
-              name="username"
-              autoComplete="username"
-              value={formData.username}
-              onChange={handleChange}
-              required
-              sx={{ marginBottom: "1rem" }}
-            />
-            <TextField
-              variant="outlined"
-              fullWidth
-              label="Password"
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              sx={{ marginBottom: "1rem" }}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{
-                marginTop: "1.5rem",
-                backgroundColor: "primary.main",
-                color: "#fff",
-                "&:hover": {
-                  backgroundColor: "primary.dark",
-                },
-              }}
-            >
-              Login
-            </Button>
-          </form>
+          {authType.toUpperCase() === "JWT" ? (
+            <form onSubmit={handleSubmit} noValidate>
+              <FormContent formData={formData} handleChange={handleChange} />
+            </form>
+          ) : (
+            <form method="POST" action="/app/public/login" noValidate>
+              <FormContent formData={formData} handleChange={handleChange} />
+            </form>
+          )}
         </Box>
       </Paper>
     </Box>
   );
 };
 
-export default LoginPage;
+const mapStateToProps = (state: { config: anonymousConfigType }) => ({
+  config: state.config,
+});
+
+export default connect(mapStateToProps)(LoginPage);

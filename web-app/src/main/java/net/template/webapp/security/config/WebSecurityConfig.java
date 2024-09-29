@@ -18,6 +18,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -37,6 +42,8 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+
         switch (authType.toUpperCase()) {
             case "FORM": {
                 configureFormAuthorization(http);
@@ -55,7 +62,13 @@ public class WebSecurityConfig {
     private void configureJwtAuthorization(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/v1/jwt/**", "/public/**", "/login/**", "/error").permitAll()
+                        .requestMatchers(
+                                "/public/**",
+                                "/login/**",
+                                "/error",
+                                ApiConstants.APP_REST_CONTEXT_PATH + "/jwt/**",
+                                ApiConstants.APP_REST_CONTEXT_PATH + "/anonymous/**")
+                        .permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -65,7 +78,11 @@ public class WebSecurityConfig {
     private void configureFormAuthorization(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/public/**", "/login/**").permitAll()
+                        .requestMatchers(
+                                "/public/**",
+                                "/login/**",
+                                ApiConstants.APP_REST_CONTEXT_PATH + "/anonymous/**")
+                        .permitAll()
                         .requestMatchers(ApiConstants.APP_REST_CONTEXT_PATH + "/user/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 )
@@ -92,6 +109,7 @@ public class WebSecurityConfig {
 
         return authenticationManagerBuilder.build();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new PasswordEncoder() {
@@ -106,5 +124,21 @@ public class WebSecurityConfig {
                 return encodedRawPassword.equals(encodedPassword);
             }
         };
+    }
+
+    private CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(List.of("*"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+    @Bean(name = "authType")
+    public String authType() {
+        return authType;
     }
 }

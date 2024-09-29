@@ -1,2 +1,1 @@
-
-export const BASE_REST_URL = `/api/v1/`;
+export const BASE_REST_URL = `/app/api/v1/`;
